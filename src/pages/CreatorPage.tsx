@@ -33,6 +33,7 @@ const CreatorPage: React.FC = () => {
   const { account } = useWeb3React();
   const [cards, setCards] = useState<CardData[]>([]);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -62,6 +63,7 @@ const CreatorPage: React.FC = () => {
 
   const onSubmit = async (data: UploadCardFormData) => {
     try {
+      setIsLoading(true);
       if (data.image.length > 0) {
         await uploadCard(data.image[0], data.price, data.cardName, account!);
         toast({
@@ -82,6 +84,8 @@ const CreatorPage: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -138,7 +142,7 @@ const CreatorPage: React.FC = () => {
               </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="blue" type="submit">
+              <Button colorScheme="blue" type="submit" isLoading={isLoading}>
                 Upload
               </Button>
             </ModalFooter>

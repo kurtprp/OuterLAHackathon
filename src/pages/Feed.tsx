@@ -15,12 +15,14 @@ import {
 } from "@chakra-ui/react";
 import Card from "../components/Card";
 import { getCardsFromFirestore } from "../utils/firestore";
+import { useNavigate } from "react-router-dom";
 import ConnectWalletButton from "../components/ConnectWalletButton";
 import { useNavigate } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 
 function Feed() {
   const [cards, setCards] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,9 +66,9 @@ function Feed() {
             name={card.name}
             price={card.price}
             numberSold={card.numberSold}
-            creator={card.creator}
-            onBuy={() => console.log("buy")}
-            onClick={() => console.log("click")}
+            creator={"by " +card.creator}
+            onBuy={() => navigate(`/card/${card.id}`)}
+            onClick={() => navigate(`/card/${card.id}`)}
           />
         ))}
       </Grid>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, Flex, Grid } from "@chakra-ui/react";
 import Card from "../components/Card";
 import { getCardsFromFirestore } from "../utils/firestore";
+import ConnectWalletButton from "../components/ConnectWalletButton";
 
 function Feed() {
   const [cards, setCards] = useState<any[]>([]);
@@ -20,7 +21,7 @@ function Feed() {
     <Box>
       <Flex justifyContent="space-between" alignItems="center" p={4}>
         <Button>Are you a creator?</Button>
-        <Button>Connect Wallet</Button>
+        <ConnectWalletButton />
       </Flex>
       <Grid
         templateColumns="repeat(auto-fit, minmax(250px, 1fr))"

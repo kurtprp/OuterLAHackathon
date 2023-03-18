@@ -64,7 +64,7 @@ function Feed() {
             name={card.name}
             price={card.price}
             numberSold={card.numberSold}
-            creator={"by " + card.creator}
+            creator={card.creator}
             onBuy={() => navigate(`/card/${card.id}`)}
             onClick={() => navigate(`/card/${card.id}`)}
           />

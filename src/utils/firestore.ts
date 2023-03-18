@@ -42,7 +42,7 @@ export async function getCardsByCreator(
 ): Promise<CardData[]> {
   const cardsQuery = query(
     collection(db, "cards"),
-    where("creatorWallet", "==", creatorWallet)
+    where("creator", "==", creatorWallet)
   );
   const cardsSnapshot = await getDocs(cardsQuery);
   const cards = cardsSnapshot.docs.map((doc) => ({

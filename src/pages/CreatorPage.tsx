@@ -39,12 +39,12 @@ const CreatorPage: React.FC = () => {
           <Card
             key={card.id}
             imageUrl={card.imageUrl}
+            creator={""}
             name={card.name}
             price={card.price}
             numberSold={card.numberSold}
-            creator={card.creator}
-            onBuy={() => console.log("buy")}
-            onClick={() => console.log("click")}
+            onClick={() => {}}
+            onBuy={() => {}}
           />
         ))}
       </VStack>

@@ -59,6 +59,12 @@ const CreatorPage: React.FC = () => {
     navigate("/");
   };
 
+  const shortenAddress = (address: string, chars = 4): string => {
+    const firstChars = address.slice(0, chars);
+    const lastChars = address.slice(-chars);
+    return `${firstChars}...${lastChars}`;
+  };
+
   const handleUploadClick = () => {
     setIsUploadModalOpen(true);
   };
@@ -118,7 +124,7 @@ const CreatorPage: React.FC = () => {
             name={card.name}
             price={card.price}
             numberSold={card.numberSold}
-            creator={card.creator}
+            creator={shortenAddress(card.creator ?? "")}
             onBuy={() => {}}
             onClick={() => {}}
           />

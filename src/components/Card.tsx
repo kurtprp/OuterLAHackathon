@@ -32,7 +32,7 @@ const Card: React.FC<CardProps> = ({
         <img src={imageUrl} alt={name} />
       </Box>
       <Text>{name}</Text>
-      <Text>{creator}</Text>
+      {creator && <Text>by {creator}</Text>}
       <Text>{price} ETH</Text>
       <Text>{numberSold} sold</Text>
       <Button

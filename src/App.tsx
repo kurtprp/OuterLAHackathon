@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Feed from "./pages/Feed";
 import CardDetail from "./pages/CardDetail";
+import CreatorPage from "./pages/CreatorPage";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
@@ -18,6 +19,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Feed />} />
           <Route path="/card/:cardId" element={<CardDetail />} />
+          <Route path="/creator" element={<CreatorPage />} />{" "}
+          {/* Add a route for the creator page */}
         </Routes>
       </Router>
     </Web3ReactProvider>

@@ -145,7 +145,7 @@ const CreatorPage: React.FC = () => {
           <ModalHeader>Upload Card</ModalHeader>
           <ModalCloseButton />
           <form onSubmit={handleSubmit(onSubmit)}>
-            <ModalBody>
+            <ModalBody overflow-y:auto>
               <FormControl mb={4}>
                 <FormLabel>Card Image</FormLabel>
                 <Input type="file" {...register("image", { required: true })} />

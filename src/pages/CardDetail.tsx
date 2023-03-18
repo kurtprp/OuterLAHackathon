@@ -1,4 +1,3 @@
-// CardDetail.tsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -16,6 +15,7 @@ import { getCardFromFirestore } from "../utils/firestore";
 function CardDetail() {
   const { cardId } = useParams();
   const [card, setCard] = useState<any>();
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchCard = async () => {
@@ -27,26 +27,41 @@ function CardDetail() {
 
   if (!card) return null;
 
+  const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(event.target.value);
+  };
+
   return (
-    <VStack spacing={4} p={4}>
-      <Image src={card.imageUrl} alt={card.name} />
-      <Text>{card.name}</Text>
-      <Text>{card.creator}</Text>
-      <Text>{card.price} ETH</Text>
-      <Text>{card.numberSold} sold</Text>
-      <FormControl>
-        <FormLabel>Message</FormLabel>
-        <Input placeholder="Enter a message" />
-      </FormControl>
-      <FormControl>
-        <FormLabel>Sender Name (optional)</FormLabel>
-        <Input placeholder="Enter sender name" />
-      </FormControl>
-      <FormControl>
-        <FormLabel>Receiver Wallet Address</FormLabel>
-        <Input placeholder="Enter receiver wallet address" />
-      </FormControl>
-      <Button>Buy</Button>
+    <VStack w="100%" h="100%" p={4}>
+      <Box display="flex" flexDirection="row">
+        <VStack w="40%" h="40%" p={4} alignItems="flex-center">
+          <Image src={card.imageUrl} alt={card.name} mr={4} />
+          <Text>{message}</Text>
+        </VStack>
+        <VStack w="40%" h="40%" p={4} alignItems="flex-start">
+          <Text>{card.name}</Text>
+          <Text>by {card.creator}</Text>
+          <Text>{card.price} ETH</Text>
+          <Text>{card.numberSold} sold</Text>
+          <FormControl>
+            <FormLabel>Message</FormLabel>
+            <Input
+              placeholder="Enter a message"
+              value={message}
+              onChange={handleMessageChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Sender Name (optional)</FormLabel>
+            <Input placeholder="Enter sender name" />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Receiver's Wallet Address</FormLabel>
+            <Input placeholder="Enter receiver wallet address" />
+          </FormControl>
+          <Button>Send</Button>
+        </VStack>
+      </Box>
     </VStack>
   );
 }

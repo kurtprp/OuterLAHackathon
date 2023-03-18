@@ -85,6 +85,14 @@ const CreatorPage: React.FC = () => {
           isClosable: true,
         });
         handleCloseUploadModal();
+        if (account) {
+          const fetchCards = async () => {
+            const fetchedCards = await getCardsByCreator(account);
+            setCards(fetchedCards);
+          };
+
+          fetchCards();
+        }
         reset();
       }
     } catch (error: any) {

@@ -17,7 +17,6 @@ import Card from "../components/Card";
 import { getCardsFromFirestore } from "../utils/firestore";
 import { useNavigate } from "react-router-dom";
 import ConnectWalletButton from "../components/ConnectWalletButton";
-import { useNavigate } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 
 function Feed() {
@@ -33,7 +32,6 @@ function Feed() {
     fetchData();
   }, []);
 
-  const navigate = useNavigate();
   const { active } = useWeb3React();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleCreatorButtonClick = () => {
@@ -66,7 +64,7 @@ function Feed() {
             name={card.name}
             price={card.price}
             numberSold={card.numberSold}
-            creator={"by " +card.creator}
+            creator={"by " + card.creator}
             onBuy={() => navigate(`/card/${card.id}`)}
             onClick={() => navigate(`/card/${card.id}`)}
           />

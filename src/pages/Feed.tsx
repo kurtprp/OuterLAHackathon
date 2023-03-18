@@ -30,11 +30,11 @@ function Feed() {
         {cards.map((card) => (
           <Card
             key={card.id}
-            imageUrl="testurl"
-            name="testname"
-            price={123}
-            numberSold={12}
-            creator="testcreator"
+            imageUrl={card.imageUrl}
+            name={card.name}
+            price={card.price}
+            numberSold={card.numberSold}
+            creator={card.creator}
             onBuy={() => console.log("buy")}
             onClick={() => console.log("click")}
           />

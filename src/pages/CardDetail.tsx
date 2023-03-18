@@ -12,12 +12,21 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { getCardFromFirestore } from "../utils/firestore";
+import { useNavigate } from "react-router-dom";
+
+const shortenAddress = (address: string, chars = 4): string => {
+  const firstChars = address.slice(0, chars);
+  const lastChars = address.slice(-chars);
+  return `${firstChars}...${lastChars}`;
+};
 
 function CardDetail() {
   const { cardId } = useParams();
   const [card, setCard] = useState<any>();
   const [message, setMessage] = useState("");
   const [fontFamily, setFontFamily] = useState("sans-serif");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCard = async () => {
@@ -26,6 +35,9 @@ function CardDetail() {
     };
     fetchCard();
   }, [cardId]);
+  const handleHomeButtonClick = () => {
+      navigate("/");
+  };
 
   if (!card) return null;
 
@@ -38,6 +50,8 @@ function CardDetail() {
   };
 
   return (
+    <Box >
+      <Button margin={8} onClick={handleHomeButtonClick}>NiFTy cards</Button>
     <VStack w="100%" h="100%" p={4}>
       <Box display="flex" flexDirection="row">
         <VStack w="40%" h="40%" p={4} alignItems="flex-center">
@@ -46,7 +60,7 @@ function CardDetail() {
         </VStack>
         <VStack w="40%" h="40%" p={4} alignItems="flex-start">
           <Text>{card.name}</Text>
-          <Text>by {card.creator}</Text>
+          <Text>by {shortenAddress(card.creator ?? "")}</Text>
           <Text>{card.price} ETH</Text>
           <Text>{card.numberSold} sold</Text>
           <FormControl>
@@ -106,6 +120,7 @@ function CardDetail() {
         </VStack>
       </Box>
     </VStack>
+    </Box>
   );
 }
 

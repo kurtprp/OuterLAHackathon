@@ -32,6 +32,13 @@ function Feed() {
     fetchData();
   }, []);
 
+  const shortenAddress = (address: string, chars = 4): string => {
+    const firstChars = address.slice(0, chars);
+    const lastChars = address.slice(-chars);
+    return `${firstChars}...${lastChars}`;
+  };
+
+
   const { active } = useWeb3React();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleCreatorButtonClick = () => {
@@ -64,7 +71,7 @@ function Feed() {
             name={card.name}
             price={card.price}
             numberSold={card.numberSold}
-            creator={card.creator}
+            creator={shortenAddress(card.creator ?? "")}
             onBuy={() => navigate(`/card/${card.id}`)}
             onClick={() => navigate(`/card/${card.id}`)}
           />

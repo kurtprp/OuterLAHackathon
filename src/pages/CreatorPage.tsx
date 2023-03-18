@@ -22,8 +22,6 @@ import { useForm } from "react-hook-form";
 import { useWeb3React } from "@web3-react/core";
 import Card from "../components/Card";
 import { CardData, getCardsByCreator, uploadCard } from "../utils/firestore";
-import { useNavigate } from "react-router-dom";
-
 
 interface UploadCardFormData {
   image: FileList;
@@ -34,7 +32,6 @@ interface UploadCardFormData {
 const CreatorPage: React.FC = () => {
   const { account } = useWeb3React();
   const [cards, setCards] = useState<CardData[]>([]);
-  const navigate = useNavigate();
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -55,9 +52,6 @@ const CreatorPage: React.FC = () => {
       fetchCards();
     }
   }, [account]);
-  const handleHomeButtonClick = () => {
-    navigate("/");
-  };
 
   const handleUploadClick = () => {
     setIsUploadModalOpen(true);
@@ -103,12 +97,7 @@ const CreatorPage: React.FC = () => {
         alignItems="center"
         mb={4}
       >
-        <Button margin={8} onClick={handleHomeButtonClick}>
-          NiFTy cards
-        </Button>
-        <Button margin={8} onClick={handleUploadClick}>
-          Upload Card
-        </Button>
+        <Button onClick={handleUploadClick}>Upload Card</Button>
       </Box>
       <VStack spacing={4}>
         {cards.map((card) => (

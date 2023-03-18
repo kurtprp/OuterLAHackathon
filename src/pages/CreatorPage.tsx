@@ -1,13 +1,45 @@
 // src/pages/CreatorPage.tsx
 import React, { useState, useEffect } from "react";
-import { Box, Button, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  VStack,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  FormControl,
+  FormLabel,
+  Input,
+  NumberInput,
+  NumberInputField,
+  useToast,
+} from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
 import { useWeb3React } from "@web3-react/core";
 import Card from "../components/Card";
-import { CardData, getCardsByCreator } from "../utils/firestore";
+import { CardData, getCardsByCreator, uploadCard } from "../utils/firestore";
+
+interface UploadCardFormData {
+  image: FileList;
+  price: number;
+  cardName: string;
+}
 
 const CreatorPage: React.FC = () => {
   const { account } = useWeb3React();
   const [cards, setCards] = useState<CardData[]>([]);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<UploadCardFormData>();
+  const toast = useToast();
 
   useEffect(() => {
     if (account) {
@@ -20,8 +52,37 @@ const CreatorPage: React.FC = () => {
     }
   }, [account]);
 
-  const handleUpload = async () => {
-    // Upload card logic here
+  const handleUploadClick = () => {
+    setIsUploadModalOpen(true);
+  };
+
+  const handleCloseUploadModal = () => {
+    setIsUploadModalOpen(false);
+  };
+
+  const onSubmit = async (data: UploadCardFormData) => {
+    try {
+      if (data.image.length > 0) {
+        await uploadCard(data.image[0], data.price, data.cardName, account!);
+        toast({
+          title: "Card uploaded successfully",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        handleCloseUploadModal();
+        reset();
+      }
+    } catch (error: any) {
+      console.error("Failed to upload card:", error);
+      toast({
+        title: "Failed to upload card",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -32,22 +93,58 @@ const CreatorPage: React.FC = () => {
         alignItems="center"
         mb={4}
       >
-        <Button onClick={handleUpload}>Upload Card</Button>
+        <Button onClick={handleUploadClick}>Upload Card</Button>
       </Box>
       <VStack spacing={4}>
         {cards.map((card) => (
           <Card
             key={card.id}
             imageUrl={card.imageUrl}
-            creator={""}
             name={card.name}
             price={card.price}
             numberSold={card.numberSold}
-            onClick={() => {}}
+            creator={card.creator}
             onBuy={() => {}}
+            onClick={() => {}}
           />
         ))}
       </VStack>
+
+      <Modal isOpen={isUploadModalOpen} onClose={handleCloseUploadModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Upload Card</ModalHeader>
+          <ModalCloseButton />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <ModalBody>
+              <FormControl mb={4}>
+                <FormLabel>Card Image</FormLabel>
+                <Input type="file" {...register("image", { required: true })} />
+                {errors.image && <p>Please select an image to upload.</p>}
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Price (ETH)</FormLabel>
+                <NumberInput min={0} precision={4}>
+                  <NumberInputField
+                    {...register("price", { required: true, min: 0 })}
+                  />
+                </NumberInput>
+                {errors.price && <p>Please enter a valid price.</p>}
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Card Name</FormLabel>
+                <Input {...register("cardName", { required: true })} />
+                {errors.cardName && <p>Please enter a creator name.</p>}
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="blue" type="submit">
+                Upload
+              </Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

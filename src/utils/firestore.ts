@@ -7,8 +7,15 @@ import {
   getDoc,
   query,
   where,
+  addDoc,
 } from "firebase/firestore";
 import { firebaseConfig } from "../firebaseConfig";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -57,4 +64,44 @@ export async function getCardFromFirestore(cardId: string): Promise<CardData> {
   const cardDoc = await getDoc(doc(db, "cards", cardId));
   const cardData = { id: cardDoc.id, ...cardDoc.data() } as CardData;
   return cardData;
+}
+
+export async function uploadCard(
+  image: File,
+  price: number,
+  name: string,
+  creatorWallet: string
+): Promise<void> {
+  const storage = getStorage(app);
+  const imageRef = ref(storage, `cards/${creatorWallet}/${image.name}`);
+  const uploadTask = uploadBytesResumable(imageRef, image);
+
+  try {
+    await new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Progress function
+        },
+        (error) => {
+          reject(error);
+        },
+        async () => {
+          const downloadURL = await getDownloadURL(imageRef);
+          const cardData = {
+            imageUrl: downloadURL,
+            price,
+            name,
+            creator: creatorWallet,
+            numberSold: 0,
+          };
+          await addDoc(collection(db, "cards"), cardData);
+          resolve(null);
+        }
+      );
+    });
+  } catch (error) {
+    console.error("Failed to upload card:", error);
+    throw error;
+  }
 }

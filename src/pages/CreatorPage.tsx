@@ -4,10 +4,13 @@ import { Box, Button, VStack } from "@chakra-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import Card from "../components/Card";
 import { CardData, getCardsByCreator } from "../utils/firestore";
+import { useNavigate } from "react-router-dom";
+
 
 const CreatorPage: React.FC = () => {
   const { account } = useWeb3React();
   const [cards, setCards] = useState<CardData[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (account) {
@@ -19,6 +22,9 @@ const CreatorPage: React.FC = () => {
       fetchCards();
     }
   }, [account]);
+  const handleHomeButtonClick = () => {
+    navigate("/");
+  };
 
   const handleUpload = async () => {
     // Upload card logic here
@@ -32,7 +38,12 @@ const CreatorPage: React.FC = () => {
         alignItems="center"
         mb={4}
       >
-        <Button onClick={handleUpload}>Upload Card</Button>
+        <Button margin={8} onClick={handleHomeButtonClick}>
+          NiFTy cards
+        </Button>
+        <Button margin={8} onClick={handleUpload}>
+          Upload Card
+        </Button>
       </Box>
       <VStack spacing={4}>
         {cards.map((card) => (

@@ -73,7 +73,7 @@ function CardDetail() {
             <FormControl>
               <FormLabel>Message</FormLabel>
               <Input
-                placeholder="Enter a message"
+                placeholder={CategoryPlaceholderMessage[card.category as Category]}
                 value={message}
                 onChange={handleMessageChange}
               />

@@ -45,6 +45,8 @@ const Card: React.FC<CardProps> = ({
           e.stopPropagation();
           onBuy();
         }}
+        style={{ backgroundColor: "#ED5753" }}
+        css={{ fontFamily: "VT323, monospace", fontSize: "20px" }}
       >
         Buy
       </Button>

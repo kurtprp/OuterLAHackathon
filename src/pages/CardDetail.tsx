@@ -108,7 +108,12 @@ function CardDetail() {
 
   return (
     <Box>
-      <Button margin={8} onClick={handleHomeButtonClick}>
+      <Button
+        margin={8}
+        onClick={handleHomeButtonClick}
+        style={{ backgroundColor: "#ED5753" }}
+        css={{ fontFamily: "VT323, monospace", fontSize: "24px" }}
+      >
         NiFTy cards
       </Button>
       <VStack w="100%" h="100%" p={4}>
@@ -185,7 +190,8 @@ function CardDetail() {
                 onChange={handleReceiverAddressChange}
               />
             </FormControl>
-            <Button onClick={handleBuyClick} isLoading={isLoading}>
+<Button onClick={handleBuyClick} isLoading={isLoading}  style={{ backgroundColor: "#ED5753" }}
+css={{ fontFamily: "VT323, monospace", fontSize: "20px" }}>
               Buy
             </Button>{" "}
           </VStack>

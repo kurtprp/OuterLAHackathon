@@ -119,10 +119,20 @@ const CreatorPage: React.FC = () => {
         alignItems="center"
         mb={4}
       >
-        <Button margin={8} onClick={handleHomeButtonClick}>
+        <Button
+          margin={8}
+          onClick={handleHomeButtonClick}
+          style={{ backgroundColor: "#ED5753" }}
+          css={{ fontFamily: "VT323, monospace", fontSize: "24px" }}
+        >
           NiFTy cards
         </Button>
-        <Button margin={8} onClick={handleUploadClick}>
+        <Button
+          margin={8}
+          onClick={handleUploadClick}
+          style={{ backgroundColor: "#ED5753" }}
+          css={{ fontFamily: "VT323, monospace", fontSize: "24x" }}
+        >
           Upload Card
         </Button>
       </Box>
@@ -188,7 +198,13 @@ const CreatorPage: React.FC = () => {
               </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="blue" type="submit" isLoading={isLoading}>
+              <Button
+                colorScheme="blue"
+                type="submit"
+                isLoading={isLoading}
+                style={{ backgroundColor: "#ED5753" }}
+                css={{ fontFamily: "VT323, monospace", fontSize: "20px" }}
+              >
                 Upload
               </Button>
             </ModalFooter>

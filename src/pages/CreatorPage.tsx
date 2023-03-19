@@ -24,7 +24,6 @@ import Card from "../components/Card";
 import { CardData, getCardsByCreator, uploadCard } from "../utils/firestore";
 import { useNavigate } from "react-router-dom";
 
-
 interface UploadCardFormData {
   image: FileList;
   price: number;
@@ -145,7 +144,7 @@ const CreatorPage: React.FC = () => {
           <ModalHeader>Upload Card</ModalHeader>
           <ModalCloseButton />
           <form onSubmit={handleSubmit(onSubmit)}>
-            <ModalBody overflow-y:auto>
+            <ModalBody overflow-y={"auto"}>
               <FormControl mb={4}>
                 <FormLabel>Card Image</FormLabel>
                 <Input type="file" {...register("image", { required: true })} />

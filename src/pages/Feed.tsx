@@ -60,7 +60,7 @@ function Feed() {
         <ConnectWalletButton />
       </Flex>
       <Grid
-        templateColumns="repeat(auto-fit, minmax(250px, 1fr))"
+        templateColumns="repeat(auto-fit, minmax(300px, 1fr))"
         gap={4}
         p={4}
       >

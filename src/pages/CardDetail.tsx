@@ -15,6 +15,7 @@ import { getCardFromFirestore, addTransaction } from "../utils/firestore";
 import { Category, CategoryPlaceholderMessage } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import { mintAndTransferNFT } from "../contract/mintAndTransferNFT";
+import { createTokenURI } from "../utils/ipfsman";
 
 const shortenAddress = (address: string, chars = 4): string => {
   const firstChars = address.slice(0, chars);
@@ -27,6 +28,8 @@ function CardDetail() {
   const [card, setCard] = useState<any>();
   const [message, setMessage] = useState("");
   const [fontFamily, setFontFamily] = useState("papyrus");
+  // add isloading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const [receiverAddress, setReceiverAddress] = useState(
     "0xf753f55EF913a038D2d156cD968e26B61788011c"
@@ -34,20 +37,28 @@ function CardDetail() {
 
   const handleBuyClick = async () => {
     try {
+      setIsLoading(true);
       console.log("Buying card...", card);
       if (!receiverAddress) {
         alert("Please enter a receiver address");
         return;
       }
 
+      let contractAddress = card.contractAddress;
+      if (!contractAddress) {
+        contractAddress = "0x1B77Ee32DC5C769aE2F4F30c871b6D5B560D4817";
+      }
+
+      const tokenURI = await createTokenURI(card.imageUrl, message, card.name);
+
+      console.log("tokenURI", tokenURI);
       // Update the parameters below according to your project requirements
       const tx = await mintAndTransferNFT(
-        card.contractAddress,
+        contractAddress,
         receiverAddress,
-        "https://google.com",
+        tokenURI,
         card.price
       );
-      alert("Card minted and transfered successfully!" + tx);
       // add tx to firestore
       console.log(
         "Adding transaction to firestore...",
@@ -61,6 +72,8 @@ function CardDetail() {
     } catch (error) {
       console.error("Buying failed:", error);
       alert("Buying failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -116,7 +129,9 @@ function CardDetail() {
             <FormControl>
               <FormLabel>Message</FormLabel>
               <Input
-                placeholder={CategoryPlaceholderMessage[card.category as Category]}
+                placeholder={
+                  CategoryPlaceholderMessage[card.category as Category]
+                }
                 value={message}
                 onChange={handleMessageChange}
               />
@@ -170,7 +185,9 @@ function CardDetail() {
                 onChange={handleReceiverAddressChange}
               />
             </FormControl>
-            <Button onClick={handleBuyClick}>Buy</Button>{" "}
+            <Button onClick={handleBuyClick} isLoading={isLoading}>
+              Buy
+            </Button>{" "}
           </VStack>
         </Box>
       </VStack>

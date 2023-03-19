@@ -48,7 +48,15 @@ function CardDetail() {
       );
       alert("Card minted and transfered successfully!" + tx);
       // add tx to firestore
+      console.log(
+        "Adding transaction to firestore...",
+        tx?.buyer,
+        tx?.tx,
+        card.id,
+        receiverAddress
+      );
       await addTransaction(card.id, tx?.buyer, receiverAddress, tx?.tx);
+      alert("Card added to your collection!");
     } catch (error) {
       console.error("Buying failed:", error);
       alert("Buying failed. Please try again.");

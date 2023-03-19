@@ -8,6 +8,7 @@ import {
   query,
   where,
   addDoc,
+  setDoc,
 } from "firebase/firestore";
 import { firebaseConfig } from "../firebaseConfig";
 import {
@@ -16,7 +17,6 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import firebase from "firebase/compat/app";
 import deployCreatorContract from "../contract/deployContract";
 
 const app = initializeApp(firebaseConfig);
@@ -69,14 +69,27 @@ export async function addTransaction(
   receiver: string,
   tx: string
 ): Promise<void> {
-  // add data under purchases collection by buyer id
-  await addDoc(collection(db, "purchases", buyer), {
-    cardId,
-    receiver,
-    tx,
-    // server timestamp
-    ts: firebase.firestore.FieldValue.serverTimestamp(),
-  });
+  console.log("addTransaction", cardId, buyer, receiver, tx);
+  // add a doc with id buyer under purchases collection
+  await setDoc(
+    doc(db, "purchases", buyer),
+    {
+      cardId,
+      receiver,
+      tx,
+    },
+    { merge: true }
+  );
+  // update card doc increase numberSold by 1
+  const cardDoc = await getDoc(doc(db, "cards", cardId));
+  const cardData = { id: cardDoc.id, ...cardDoc.data() } as CardData;
+  await setDoc(
+    doc(db, "cards", cardId),
+    {
+      numberSold: cardData.numberSold + 1,
+    },
+    { merge: true }
+  );
 }
 
 export async function getCardFromFirestore(cardId: string): Promise<CardData> {

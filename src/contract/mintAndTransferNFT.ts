@@ -40,29 +40,25 @@ export const mintAndTransferNFT = async (
     console.log("nftPriceValue:", nftPriceValue);
     // Estimate the gas required to call mintAndTransferNFT
 
-    const gas = await contract.methods
-      .mintAndTransferNFT(buyer, receiver, tokenURI)
-      .estimateGas({
-        from: buyer,
-        value: nftPriceValue,
-      });
-
     /*const gas = await contract.methods
       .mintAndTransferNFT(buyer, receiver, tokenURI)
       .estimateGas({ from: buyer, value: nftPriceValue });*/
 
-    console.log("Gas required:", gas.toString());
+    const gas = await contract.methods
+      .mintAndTransferNFT(receiver, tokenURI)
+      .estimateGas({ from: buyer, value: nftPriceValue });
 
-    // Create the transaction object
+    console.log("gas:", gas);
+
     const transaction = {
       from: buyer,
       to: contractAddress,
       gas: gas.toString(),
-      data: contract.methods
-        .mintAndTransferNFT(buyer, receiver, tokenURI)
-        .encodeABI(),
+      data: contract.methods.mintAndTransferNFT(receiver, tokenURI).encodeABI(),
       value: nftPriceValue,
     };
+
+    console.log("Transaction object:", transaction);
 
     // Send the transaction
     const tx = await (provider as any)

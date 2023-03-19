@@ -17,6 +17,7 @@ import {
   NumberInput,
   NumberInputField,
   useToast,
+  Select,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { useWeb3React } from "@web3-react/core";
@@ -155,9 +156,22 @@ const CreatorPage: React.FC = () => {
               </FormControl>
               <FormControl mb={4}>
                 <FormLabel>Category</FormLabel>
-                <Input {...register("category", { required: true })} />
-                {errors.category && <p>Please enter a category.</p>}
+                <Select
+                  {...register("category", {
+                    required: true,
+                    validate: (value) =>
+                      Object.values(Category).includes(value),
+                  })}
+                >
+                  {Object.values(Category).map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </Select>
+                {errors.category && <p>Please select a valid category.</p>}
               </FormControl>
+
               <FormControl mb={4}>
                 <FormLabel>Price (ETH)</FormLabel>
                 <NumberInput min={0} precision={4}>

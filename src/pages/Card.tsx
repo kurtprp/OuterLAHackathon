@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 interface CardProps {
   card: {
     id: string;
+    category: string;
     imageUrl: string;
     name: string;
     creator: string;

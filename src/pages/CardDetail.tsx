@@ -12,6 +12,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { getCardFromFirestore } from "../utils/firestore";
+import { Category, CategoryPlaceholderMessage } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 
 const shortenAddress = (address: string, chars = 4): string => {
@@ -24,7 +25,7 @@ function CardDetail() {
   const { cardId } = useParams();
   const [card, setCard] = useState<any>();
   const [message, setMessage] = useState("");
-  const [fontFamily, setFontFamily] = useState("sans-serif");
+  const [fontFamily, setFontFamily] = useState("papyrus");
 
   const navigate = useNavigate();
 
@@ -58,7 +59,11 @@ function CardDetail() {
         <Box display="flex" flexDirection="row">
           <VStack w="40%" h="40%" p={4} alignItems="flex-center">
             <Image src={card.imageUrl} alt={card.name} mr={4} />
-            <Text fontFamily={fontFamily}>{message}</Text>
+            <Text fontFamily={fontFamily}>
+              {message
+                ? message
+                : CategoryPlaceholderMessage[card.category as Category]}
+            </Text>
           </VStack>
           <VStack w="40%" h="40%" p={4} alignItems="flex-start">
             <Text>{card.name}</Text>

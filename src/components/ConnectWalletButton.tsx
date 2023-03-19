@@ -39,6 +39,8 @@ const ConnectWalletButton: React.FC = () => {
           setShowDisconnect(true);
         }}
         isDisabled={active}
+        style={{ backgroundColor: "#ED5753" }}
+        css={{ fontFamily: "VT323, monospace", fontSize: "20px" }}
       >
         {active ? (
           <>
@@ -52,7 +54,11 @@ const ConnectWalletButton: React.FC = () => {
         )}
       </Button>
       {active && showDisconnect && (
-        <Button colorScheme="red" onClick={handleDisconnectWallet}>
+        <Button
+          onClick={handleDisconnectWallet}
+          style={{ backgroundColor: "#ED5753" }}
+          css={{ fontFamily: "VT323, monospace", fontSize: "20px" }}
+        >
           Disconnect
         </Button>
       )}

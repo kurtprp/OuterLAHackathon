@@ -69,7 +69,13 @@ function Feed() {
   return (
     <Box>
       <Flex justifyContent="space-between" alignItems="center" p={4}>
-        <Button onClick={handleCreatorButtonClick}>Are you a creator?</Button>
+        <Button
+          onClick={handleCreatorButtonClick}
+          style={{ backgroundColor: "#ED5753" }}
+          css={{ fontFamily: "VT323, monospace", fontSize: "20px" }}
+        >
+          Are you a creator?
+        </Button>
         <ConnectWalletButton />
       </Flex>
 
@@ -81,6 +87,8 @@ function Feed() {
             colorScheme="blue"
             mx={2}
             onClick={() => setFilter(category as Category)}
+            // style={{ backgroundColor: "#ED5753" }}
+            css={{ fontFamily: "VT323, monospace", fontSize: "24px" }}
           >
             {category}
           </Button>
@@ -116,7 +124,13 @@ function Feed() {
             To access the creator page, you need to connect your wallet first.
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={closeModal}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={closeModal}
+              style={{ backgroundColor: "#ED5753" }}
+              css={{ fontFamily: "VT323, monospace", fontSize: "20px" }}
+            >
               Close
             </Button>
           </ModalFooter>

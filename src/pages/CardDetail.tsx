@@ -14,6 +14,7 @@ import {
 import { getCardFromFirestore } from "../utils/firestore";
 import { Category, CategoryPlaceholderMessage } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
+// import styled from "styled-components";
 
 const shortenAddress = (address: string, chars = 4): string => {
   const firstChars = address.slice(0, chars);
@@ -52,7 +53,12 @@ function CardDetail() {
 
   return (
     <Box>
-      <Button margin={8} onClick={handleHomeButtonClick}>
+      <Button
+        margin={8}
+        onClick={handleHomeButtonClick}
+        style={{ backgroundColor: "#ED5753" }}
+        css={{ fontFamily: "VT323, monospace", fontSize: "24px" }}
+      >
         NiFTy cards
       </Button>
       <VStack w="100%" h="100%" p={4}>
@@ -73,7 +79,9 @@ function CardDetail() {
             <FormControl>
               <FormLabel>Message</FormLabel>
               <Input
-                placeholder={CategoryPlaceholderMessage[card.category as Category]}
+                placeholder={
+                  CategoryPlaceholderMessage[card.category as Category]
+                }
                 value={message}
                 onChange={handleMessageChange}
               />
@@ -123,7 +131,12 @@ function CardDetail() {
               <FormLabel>Receiver's Wallet Address</FormLabel>
               <Input placeholder="Enter receiver wallet address" />
             </FormControl>
-            <Button>Send</Button>
+            <Button
+              style={{ backgroundColor: "#ED5753" }}
+              css={{ fontFamily: "VT323, monospace", fontSize: "20px" }}
+            >
+              Send
+            </Button>
           </VStack>
         </Box>
       </VStack>

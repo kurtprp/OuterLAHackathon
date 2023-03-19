@@ -12,6 +12,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { getCardFromFirestore, addTransaction } from "../utils/firestore";
+import { Category, CategoryPlaceholderMessage } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import { mintAndTransferNFT } from "../contract/mintAndTransferNFT";
 
@@ -25,7 +26,7 @@ function CardDetail() {
   const { cardId } = useParams();
   const [card, setCard] = useState<any>();
   const [message, setMessage] = useState("");
-  const [fontFamily, setFontFamily] = useState("sans-serif");
+  const [fontFamily, setFontFamily] = useState("papyrus");
 
   const [receiverAddress, setReceiverAddress] = useState(
     "0xf753f55EF913a038D2d156cD968e26B61788011c"
@@ -101,7 +102,11 @@ function CardDetail() {
         <Box display="flex" flexDirection="row">
           <VStack w="40%" h="40%" p={4} alignItems="flex-center">
             <Image src={card.imageUrl} alt={card.name} mr={4} />
-            <Text fontFamily={fontFamily}>{message}</Text>
+            <Text fontFamily={fontFamily}>
+              {message
+                ? message
+                : CategoryPlaceholderMessage[card.category as Category]}
+            </Text>
           </VStack>
           <VStack w="40%" h="40%" p={4} alignItems="flex-start">
             <Text>{card.name}</Text>
@@ -111,7 +116,7 @@ function CardDetail() {
             <FormControl>
               <FormLabel>Message</FormLabel>
               <Input
-                placeholder="Enter a message"
+                placeholder={CategoryPlaceholderMessage[card.category as Category]}
                 value={message}
                 onChange={handleMessageChange}
               />

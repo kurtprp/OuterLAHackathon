@@ -1,7 +1,8 @@
 import React from "react";
-import { Box, VStack, Text, Button } from "@chakra-ui/react";
+import { Box, VStack, Text, Button, HStack } from "@chakra-ui/react";
 
 interface CardProps {
+  category: string;
   imageUrl: string;
   name: string;
   creator: string;
@@ -31,10 +32,14 @@ const Card: React.FC<CardProps> = ({
       <Box maxW="sm" overflow="hidden">
         <img src={imageUrl} alt={name} />
       </Box>
-      <Text>{name}</Text>
-      {creator && <Text>by {creator}</Text>}
-      <Text>{price} ETH</Text>
-      <Text>{numberSold} sold</Text>
+      <HStack justify="space-between">
+        <Text>{name}</Text>
+        {creator && <Text>by {creator}</Text>}
+      </HStack>
+      <HStack justify="space-between">
+        <Text>{price} ETH</Text>
+        <Text>{numberSold} sold</Text>
+      </HStack>
       <Button
         onClick={(e) => {
           e.stopPropagation();

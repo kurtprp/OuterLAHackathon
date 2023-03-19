@@ -18,12 +18,14 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import deployCreatorContract from "../contract/deployContract";
+import { Category } from "./constants";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export interface CardData {
   id: string;
+  category: Category;
   image: string;
   price: number;
   creatorName: string;
@@ -102,7 +104,8 @@ export async function uploadCard(
   image: File,
   price: number,
   name: string,
-  creatorWallet: string
+  creatorWallet: string,
+  category: Category
 ): Promise<void> {
   const storage = getStorage(app);
   const imageRef = ref(storage, `cards/${creatorWallet}/${image.name}`);
@@ -126,6 +129,7 @@ export async function uploadCard(
           );
 
           const cardData = {
+            category: category,
             imageUrl: downloadURL,
             price,
             name,

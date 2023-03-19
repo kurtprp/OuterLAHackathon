@@ -17,18 +17,20 @@ import {
   NumberInput,
   NumberInputField,
   useToast,
+  Select,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { useWeb3React } from "@web3-react/core";
 import Card from "../components/Card";
 import { CardData, getCardsByCreator, uploadCard } from "../utils/firestore";
 import { useNavigate } from "react-router-dom";
-
+import { Category } from "../utils/constants";
 
 interface UploadCardFormData {
   image: FileList;
   price: number;
   cardName: string;
+  category: Category;
 }
 
 const CreatorPage: React.FC = () => {
@@ -77,7 +79,7 @@ const CreatorPage: React.FC = () => {
     try {
       setIsLoading(true);
       if (data.image.length > 0) {
-        await uploadCard(data.image[0], data.price, data.cardName, account!);
+        await uploadCard(data.image[0], data.price, data.cardName, account!, data.category);
         toast({
           title: "Card uploaded successfully",
           status: "success",
@@ -85,6 +87,14 @@ const CreatorPage: React.FC = () => {
           isClosable: true,
         });
         handleCloseUploadModal();
+        if (account) {
+          const fetchCards = async () => {
+            const fetchedCards = await getCardsByCreator(account);
+            setCards(fetchedCards);
+          };
+
+          fetchCards();
+        }
         reset();
       }
     } catch (error: any) {
@@ -120,6 +130,7 @@ const CreatorPage: React.FC = () => {
         {cards.map((card) => (
           <Card
             key={card.id}
+            category={card.category}
             imageUrl={card.imageUrl}
             name={card.name}
             price={card.price}
@@ -137,12 +148,30 @@ const CreatorPage: React.FC = () => {
           <ModalHeader>Upload Card</ModalHeader>
           <ModalCloseButton />
           <form onSubmit={handleSubmit(onSubmit)}>
-            <ModalBody>
+            <ModalBody overflow-y={"auto"}>
               <FormControl mb={4}>
                 <FormLabel>Card Image</FormLabel>
                 <Input type="file" {...register("image", { required: true })} />
                 {errors.image && <p>Please select an image to upload.</p>}
               </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Category</FormLabel>
+                <Select
+                  {...register("category", {
+                    required: true,
+                    validate: (value) =>
+                      Object.values(Category).includes(value),
+                  })}
+                >
+                  {Object.values(Category).map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </Select>
+                {errors.category && <p>Please select a valid category.</p>}
+              </FormControl>
+
               <FormControl mb={4}>
                 <FormLabel>Price (ETH)</FormLabel>
                 <NumberInput min={0} precision={4}>

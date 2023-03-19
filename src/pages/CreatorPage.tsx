@@ -23,11 +23,13 @@ import { useWeb3React } from "@web3-react/core";
 import Card from "../components/Card";
 import { CardData, getCardsByCreator, uploadCard } from "../utils/firestore";
 import { useNavigate } from "react-router-dom";
+import { Category } from "../utils/constants";
 
 interface UploadCardFormData {
   image: FileList;
   price: number;
   cardName: string;
+  category: Category;
 }
 
 const CreatorPage: React.FC = () => {
@@ -76,7 +78,7 @@ const CreatorPage: React.FC = () => {
     try {
       setIsLoading(true);
       if (data.image.length > 0) {
-        await uploadCard(data.image[0], data.price, data.cardName, account!);
+        await uploadCard(data.image[0], data.price, data.cardName, account!, data.category);
         toast({
           title: "Card uploaded successfully",
           status: "success",
@@ -127,6 +129,7 @@ const CreatorPage: React.FC = () => {
         {cards.map((card) => (
           <Card
             key={card.id}
+            category={card.category}
             imageUrl={card.imageUrl}
             name={card.name}
             price={card.price}
@@ -149,6 +152,11 @@ const CreatorPage: React.FC = () => {
                 <FormLabel>Card Image</FormLabel>
                 <Input type="file" {...register("image", { required: true })} />
                 {errors.image && <p>Please select an image to upload.</p>}
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Category</FormLabel>
+                <Input {...register("category", { required: true })} />
+                {errors.category && <p>Please enter a category.</p>}
               </FormControl>
               <FormControl mb={4}>
                 <FormLabel>Price (ETH)</FormLabel>

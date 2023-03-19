@@ -2,6 +2,7 @@ import React from "react";
 import { Box, VStack, Text, Button, HStack } from "@chakra-ui/react";
 
 interface CardProps {
+  category: string;
   imageUrl: string;
   name: string;
   creator: string;

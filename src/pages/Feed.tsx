@@ -18,9 +18,12 @@ import { getCardsFromFirestore } from "../utils/firestore";
 import { useNavigate } from "react-router-dom";
 import ConnectWalletButton from "../components/ConnectWalletButton";
 import { useWeb3React } from "@web3-react/core";
+import { Category } from "../utils/constants";
 
 function Feed() {
   const [cards, setCards] = useState<any[]>([]);
+  const [filteredCards, setFilteredCards] = useState<any[]>([]);
+  const [filter, setFilter] = useState(Category.All);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +34,16 @@ function Feed() {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    console.log("filter", filter );
+    console.log("cards", cards);
+    const filteredCards =
+      filter !== Category.All
+        ? cards.filter((card) => card.category === filter)
+        : cards;
+    setFilteredCards(filteredCards);
+  }, [cards, filter]);
 
   const shortenAddress = (address: string, chars = 4): string => {
     const firstChars = address.slice(0, chars);
@@ -59,14 +72,31 @@ function Feed() {
         <Button onClick={handleCreatorButtonClick}>Are you a creator?</Button>
         <ConnectWalletButton />
       </Flex>
+
+      <Flex flexWrap="wrap" align="center" justify="center" my={4}>
+        {Object.values(Category).map((category) => (
+          <Button
+            key={category}
+            variant="ghost"
+            colorScheme="blue"
+            mx={2}
+            onClick={() => setFilter(category as Category)}
+          >
+            {category}
+          </Button>
+        ))}
+      </Flex>
+
       <Grid
         templateColumns="repeat(auto-fit, minmax(300px, 1fr))"
         gap={4}
         p={4}
+        grid-auto-rows="min-content"
       >
-        {cards.map((card) => (
+        {filteredCards.map((card) => (
           <Card
             key={card.id}
+            category={card.category}
             imageUrl={card.imageUrl}
             name={card.name}
             price={card.price}

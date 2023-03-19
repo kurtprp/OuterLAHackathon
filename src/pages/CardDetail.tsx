@@ -11,8 +11,9 @@ import {
   FormLabel,
   Select,
 } from "@chakra-ui/react";
-import { getCardFromFirestore } from "../utils/firestore";
+import { getCardFromFirestore, addTransaction } from "../utils/firestore";
 import { useNavigate } from "react-router-dom";
+import { mintAndTransferNFT } from "../contract/mintAndTransferNFT";
 
 const shortenAddress = (address: string, chars = 4): string => {
   const firstChars = address.slice(0, chars);
@@ -25,6 +26,40 @@ function CardDetail() {
   const [card, setCard] = useState<any>();
   const [message, setMessage] = useState("");
   const [fontFamily, setFontFamily] = useState("sans-serif");
+
+  const [receiverAddress, setReceiverAddress] = useState(
+    "0xf753f55EF913a038D2d156cD968e26B61788011c"
+  );
+
+  const handleBuyClick = async () => {
+    try {
+      console.log("Buying card...", card);
+      if (!receiverAddress) {
+        alert("Please enter a receiver address");
+        return;
+      }
+
+      // Update the parameters below according to your project requirements
+      const tx = await mintAndTransferNFT(
+        card.contractAddress,
+        receiverAddress,
+        "https://google.com",
+        card.price
+      );
+      alert("Card minted and transfered successfully!" + tx);
+      // add tx to firestore
+      await addTransaction(card.id, tx?.buyer, receiverAddress, tx?.tx);
+    } catch (error) {
+      console.error("Buying failed:", error);
+      alert("Buying failed. Please try again.");
+    }
+  };
+
+  const handleReceiverAddressChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setReceiverAddress(event.target.value);
+  };
 
   const navigate = useNavigate();
 
@@ -116,9 +151,13 @@ function CardDetail() {
             </FormControl>
             <FormControl>
               <FormLabel>Receiver's Wallet Address</FormLabel>
-              <Input placeholder="Enter receiver wallet address" />
+              <Input
+                placeholder="Enter receiver wallet address"
+                value={receiverAddress}
+                onChange={handleReceiverAddressChange}
+              />
             </FormControl>
-            <Button>Send</Button>
+            <Button onClick={handleBuyClick}>Buy</Button>{" "}
           </VStack>
         </Box>
       </VStack>

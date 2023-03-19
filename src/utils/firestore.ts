@@ -16,6 +16,8 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import firebase from "firebase/compat/app";
+import deployCreatorContract from "../contract/deployContract";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -60,6 +62,23 @@ export async function getCardsByCreator(
   return cards;
 }
 
+// add transaction to firestore
+export async function addTransaction(
+  cardId: string,
+  buyer: string,
+  receiver: string,
+  tx: string
+): Promise<void> {
+  // add data under purchases collection by buyer id
+  await addDoc(collection(db, "purchases", buyer), {
+    cardId,
+    receiver,
+    tx,
+    // server timestamp
+    ts: firebase.firestore.FieldValue.serverTimestamp(),
+  });
+}
+
 export async function getCardFromFirestore(cardId: string): Promise<CardData> {
   const cardDoc = await getDoc(doc(db, "cards", cardId));
   const cardData = { id: cardDoc.id, ...cardDoc.data() } as CardData;
@@ -88,12 +107,18 @@ export async function uploadCard(
         },
         async () => {
           const downloadURL = await getDownloadURL(imageRef);
+          const contract = await deployCreatorContract(
+            creatorWallet,
+            price.toString()
+          );
+
           const cardData = {
             imageUrl: downloadURL,
             price,
             name,
             creator: creatorWallet,
             numberSold: 0,
+            contractAddress: contract,
           };
           await addDoc(collection(db, "cards"), cardData);
           resolve(null);
